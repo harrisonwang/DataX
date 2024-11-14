@@ -226,9 +226,23 @@
     </dependencyManagement>
 
     <repositories>
+        <!-- Maven 中央仓库 -->
         <repository>
-            <id>central</id>
-            <name>Nexus aliyun</name>
+            <id>maven-central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        
+        <!-- 阿里云中央仓库镜像 -->
+        <repository>
+            <id>central-aliyun</id>
+            <name>Nexus Aliyun Central Mirror</name>
             <url>https://maven.aliyun.com/repository/central</url>
             <releases>
                 <enabled>true</enabled>
@@ -237,9 +251,11 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+
+        <!-- 阿里云 Spring 仓库镜像 -->
         <repository>
-            <id>spring</id>
-            <name>spring</name>
+            <id>spring-aliyun</id>
+            <name>Aliyun Spring Repository</name>
             <url>https://maven.aliyun.com/repository/spring</url>
             <releases>
                 <enabled>true</enabled>
@@ -251,9 +267,23 @@
     </repositories>
 
     <pluginRepositories>
+        <!-- Maven 插件中央仓库 -->
         <pluginRepository>
-            <id>central</id>
-            <name>Nexus aliyun</name>
+            <id>maven-plugin-central</id>
+            <name>Maven Plugin Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        
+        <!-- 阿里云中央仓库插件镜像 -->
+        <pluginRepository>
+            <id>central-plugin-aliyun</id>
+            <name>Nexus Aliyun Plugin Mirror</name>
             <url>https://maven.aliyun.com/repository/central</url>
             <releases>
                 <enabled>true</enabled>
