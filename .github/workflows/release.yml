@@ -63,7 +63,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          asset_path: datax.tar.gz
+          file: datax.tar.gz
           asset_name: datax.tar.gz
           tag: ${{ github.ref_name }}
 
