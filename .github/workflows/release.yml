@@ -1,0 +1,38 @@
+name: Build DataX Package
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build DataX
+        run: |
+          ./mvnw -U clean package assembly:assembly -Dmaven.test.skip=true
+
+      - name: Create Release Artifact
+        run: |
+          mkdir -p release
+          cp target/datax.tar.gz release/
+        continue-on-error: false
+
+      - name: Upload Release Assets
+        uses: actions/upload-artifact@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          name: datax-package
+          path: release/datax.tar.gz
