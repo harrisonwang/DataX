@@ -13,46 +13,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
+      - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: 设置 JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '8'
 
-      - name: Build DataX
+      - name: 构建 DataX
         run: |
           ./mvnw -U clean package assembly:assembly -Dmaven.test.skip=true
 
-      - name: Create Release Artifact
+      - name: 创建发布 Artifact
         run: |
-          mkdir -p release
-          cp target/datax.tar.gz release/
-        continue-on-error: false
+          cp target/datax.tar.gz .
 
-      - name: Upload Build Assets
+      - name: 上传构建产物
         uses: actions/upload-artifact@v3
         with:
           name: datax-package
-          path: release/datax.tar.gz
+          path: datax.tar.gz
 
   release:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-
-      - name: Download Build Artifact
+      - name: 下载构建的 Artifact
         uses: actions/download-artifact@v3
         with:
           name: datax-package
-          path: release
 
-      - name: Create GitHub Release
+      - name: 创建 GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -61,16 +55,15 @@ jobs:
           tag_name: ${{ github.ref_name }}
           release_name: "Release ${{ github.ref_name }}"
           body: |
-            This release includes the latest build of the DataX package.
+            此版本包含最新构建的 DataX 包。
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset to GitHub
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 上传 Release 资产到 GitHub
+        uses: svenstaro/upload-release-action@v2
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release/datax.tar.gz
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          asset_path: datax.tar.gz
           asset_name: datax.tar.gz
-          asset_content_type: application/gzip
+          tag: ${{ github.ref_name }}
+
