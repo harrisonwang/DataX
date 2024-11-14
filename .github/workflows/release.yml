@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  create:
+    tags:
+      - "*"
 
 jobs:
   build:
@@ -36,3 +39,34 @@ jobs:
         with:
           name: datax-package
           path: release/datax.tar.gz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: "Release ${{ github.ref_name }}"
+          body: |
+            This release includes the latest build of the DataX package.
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset to GitHub
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release/datax.tar.gz
+          asset_name: datax.tar.gz
+          asset_content_type: application/gzip
