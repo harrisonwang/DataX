@@ -28,13 +28,14 @@ jobs:
 
       - name: 创建发布 Artifact
         run: |
-          cp target/datax.tar.gz .
+          tar -cvf datax.tar target/datax
+          xz -9e datax.tar
 
       - name: 上传构建产物
         uses: actions/upload-artifact@v3
         with:
           name: datax-package
-          path: datax.tar.gz
+          path: datax.tar.xz
 
   release:
     needs: build
@@ -63,7 +64,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: datax.tar.gz
-          asset_name: datax.tar.gz
+          file: datax.tar.xz
+          asset_name: datax.tar.xz
           tag: ${{ github.ref_name }}
-
